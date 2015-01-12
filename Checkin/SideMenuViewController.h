@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  SideMenuViewController.h
 //  Checkin
 //
 //  Created by Borislav Jagodic on 1/10/15.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface SideMenuViewController : UIViewController
 
 @end
-

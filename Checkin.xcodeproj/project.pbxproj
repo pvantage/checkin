@@ -9,11 +9,19 @@
 /* Begin PBXBuildFile section */
 		C55EC9A01A613EED002C8860 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC99F1A613EED002C8860 /* main.m */; };
 		C55EC9A31A613EED002C8860 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9A21A613EED002C8860 /* AppDelegate.m */; };
-		C55EC9A61A613EED002C8860 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9A51A613EED002C8860 /* ViewController.m */; };
 		C55EC9A91A613EED002C8860 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9A71A613EED002C8860 /* Main.storyboard */; };
-		C55EC9AB1A613EED002C8860 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9AA1A613EED002C8860 /* Images.xcassets */; };
 		C55EC9AE1A613EED002C8860 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9AC1A613EED002C8860 /* LaunchScreen.xib */; };
 		C55EC9BA1A613EEE002C8860 /* CheckinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9B91A613EEE002C8860 /* CheckinTests.m */; };
+		C55EC9C91A616E00002C8860 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9C81A616E00002C8860 /* HomeViewController.m */; };
+		C55EC9CD1A617280002C8860 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9CC1A617280002C8860 /* Media.xcassets */; };
+		C55EC9D01A617550002C8860 /* SideMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9CF1A617550002C8860 /* SideMenuViewController.m */; };
+		C55EC9D41A61FCA1002C8860 /* Montserrat-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9D11A619890002C8860 /* Montserrat-Bold.otf */; };
+		C55EC9D51A61FCA1002C8860 /* Montserrat-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9D21A619898002C8860 /* Montserrat-Regular.otf */; };
+		C55EC9DF1A62CAA1002C8860 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9DE1A62CAA1002C8860 /* SWRevealViewController.m */; };
+		C55EC9E21A631DE2002C8860 /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9E11A631DE2002C8860 /* ListViewController.m */; };
+		C55EC9E81A633501002C8860 /* CustomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9E71A633501002C8860 /* CustomListCell.m */; };
+		C55EC9EB1A63B677002C8860 /* TicketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9EA1A63B677002C8860 /* TicketViewController.m */; };
+		C55EC9EE1A63E4FD002C8860 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9ED1A63E4FD002C8860 /* LoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,14 +40,28 @@
 		C55EC99F1A613EED002C8860 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C55EC9A11A613EED002C8860 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C55EC9A21A613EED002C8860 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C55EC9A41A613EED002C8860 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		C55EC9A51A613EED002C8860 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		C55EC9A81A613EED002C8860 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		C55EC9AA1A613EED002C8860 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C55EC9AD1A613EED002C8860 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		C55EC9B31A613EEE002C8860 /* CheckinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheckinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C55EC9B81A613EEE002C8860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C55EC9B91A613EEE002C8860 /* CheckinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CheckinTests.m; sourceTree = "<group>"; };
+		C55EC9C71A616E00002C8860 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		C55EC9C81A616E00002C8860 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		C55EC9CC1A617280002C8860 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		C55EC9CE1A617550002C8860 /* SideMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideMenuViewController.h; sourceTree = "<group>"; };
+		C55EC9CF1A617550002C8860 /* SideMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideMenuViewController.m; sourceTree = "<group>"; };
+		C55EC9D11A619890002C8860 /* Montserrat-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.otf"; sourceTree = "<group>"; };
+		C55EC9D21A619898002C8860 /* Montserrat-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.otf"; sourceTree = "<group>"; };
+		C55EC9DD1A62CAA1002C8860 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		C55EC9DE1A62CAA1002C8860 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		C55EC9E01A631DE2002C8860 /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
+		C55EC9E11A631DE2002C8860 /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
+		C55EC9E61A633501002C8860 /* CustomListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomListCell.h; sourceTree = "<group>"; };
+		C55EC9E71A633501002C8860 /* CustomListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomListCell.m; sourceTree = "<group>"; };
+		C55EC9E91A63B677002C8860 /* TicketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketViewController.h; sourceTree = "<group>"; };
+		C55EC9EA1A63B677002C8860 /* TicketViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TicketViewController.m; sourceTree = "<group>"; };
+		C55EC9EC1A63E4FD002C8860 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		C55EC9ED1A63E4FD002C8860 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,12 +105,22 @@
 			children = (
 				C55EC9A11A613EED002C8860 /* AppDelegate.h */,
 				C55EC9A21A613EED002C8860 /* AppDelegate.m */,
-				C55EC9A41A613EED002C8860 /* ViewController.h */,
-				C55EC9A51A613EED002C8860 /* ViewController.m */,
 				C55EC9A71A613EED002C8860 /* Main.storyboard */,
-				C55EC9AA1A613EED002C8860 /* Images.xcassets */,
 				C55EC9AC1A613EED002C8860 /* LaunchScreen.xib */,
+				C55EC9CC1A617280002C8860 /* Media.xcassets */,
 				C55EC99D1A613EED002C8860 /* Supporting Files */,
+				C55EC9C71A616E00002C8860 /* HomeViewController.h */,
+				C55EC9C81A616E00002C8860 /* HomeViewController.m */,
+				C55EC9CE1A617550002C8860 /* SideMenuViewController.h */,
+				C55EC9CF1A617550002C8860 /* SideMenuViewController.m */,
+				C55EC9E01A631DE2002C8860 /* ListViewController.h */,
+				C55EC9E11A631DE2002C8860 /* ListViewController.m */,
+				C55EC9E61A633501002C8860 /* CustomListCell.h */,
+				C55EC9E71A633501002C8860 /* CustomListCell.m */,
+				C55EC9E91A63B677002C8860 /* TicketViewController.h */,
+				C55EC9EA1A63B677002C8860 /* TicketViewController.m */,
+				C55EC9EC1A63E4FD002C8860 /* LoginViewController.h */,
+				C55EC9ED1A63E4FD002C8860 /* LoginViewController.m */,
 			);
 			path = Checkin;
 			sourceTree = "<group>";
@@ -96,6 +128,8 @@
 		C55EC99D1A613EED002C8860 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C55EC9DC1A62CAA1002C8860 /* SWRevealViewController */,
+				C55EC9D31A61989C002C8860 /* fonts */,
 				C55EC99E1A613EED002C8860 /* Info.plist */,
 				C55EC99F1A613EED002C8860 /* main.m */,
 			);
@@ -117,6 +151,24 @@
 				C55EC9B81A613EEE002C8860 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C55EC9D31A61989C002C8860 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				C55EC9D11A619890002C8860 /* Montserrat-Bold.otf */,
+				C55EC9D21A619898002C8860 /* Montserrat-Regular.otf */,
+			);
+			name = fonts;
+			sourceTree = "<group>";
+		};
+		C55EC9DC1A62CAA1002C8860 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C55EC9DD1A62CAA1002C8860 /* SWRevealViewController.h */,
+				C55EC9DE1A62CAA1002C8860 /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,9 +251,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C55EC9D41A61FCA1002C8860 /* Montserrat-Bold.otf in Resources */,
+				C55EC9D51A61FCA1002C8860 /* Montserrat-Regular.otf in Resources */,
 				C55EC9A91A613EED002C8860 /* Main.storyboard in Resources */,
+				C55EC9CD1A617280002C8860 /* Media.xcassets in Resources */,
 				C55EC9AE1A613EED002C8860 /* LaunchScreen.xib in Resources */,
-				C55EC9AB1A613EED002C8860 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,9 +273,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C55EC9A61A613EED002C8860 /* ViewController.m in Sources */,
+				C55EC9DF1A62CAA1002C8860 /* SWRevealViewController.m in Sources */,
+				C55EC9D01A617550002C8860 /* SideMenuViewController.m in Sources */,
+				C55EC9E81A633501002C8860 /* CustomListCell.m in Sources */,
+				C55EC9EB1A63B677002C8860 /* TicketViewController.m in Sources */,
+				C55EC9E21A631DE2002C8860 /* ListViewController.m in Sources */,
+				C55EC9EE1A63E4FD002C8860 /* LoginViewController.m in Sources */,
 				C55EC9A31A613EED002C8860 /* AppDelegate.m in Sources */,
 				C55EC9A01A613EED002C8860 /* main.m in Sources */,
+				C55EC9C91A616E00002C8860 /* HomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +403,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Checkin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -353,6 +414,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Marko Miljus (G9VDSGDM55)";
 				INFOPLIST_FILE = Checkin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -412,6 +475,7 @@
 				C55EC9BF1A613EEE002C8860 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C55EC9C01A613EEE002C8860 /* Build configuration list for PBXNativeTarget "CheckinTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +484,7 @@
 				C55EC9C21A613EEE002C8860 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
