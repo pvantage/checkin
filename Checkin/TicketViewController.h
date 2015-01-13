@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TicketViewController : UIViewController
+@interface TicketViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UIButton *btnCheckin;
 
