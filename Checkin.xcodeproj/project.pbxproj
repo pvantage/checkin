@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C55306C51A648AB2005833CF /* ScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55306C41A648AB2005833CF /* ScannerViewController.m */; };
+		C55306C71A648CEE005833CF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C55306C61A648CEE005833CF /* AVFoundation.framework */; };
+		C55306CD1A649941005833CF /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C55306CC1A649941005833CF /* beep.mp3 */; };
 		C55EC9A01A613EED002C8860 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC99F1A613EED002C8860 /* main.m */; };
 		C55EC9A31A613EED002C8860 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC9A21A613EED002C8860 /* AppDelegate.m */; };
 		C55EC9A91A613EED002C8860 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C55EC9A71A613EED002C8860 /* Main.storyboard */; };
@@ -35,6 +38,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C55306C31A648AB2005833CF /* ScannerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScannerViewController.h; sourceTree = "<group>"; };
+		C55306C41A648AB2005833CF /* ScannerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScannerViewController.m; sourceTree = "<group>"; };
+		C55306C61A648CEE005833CF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C55306CC1A649941005833CF /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
 		C55EC99A1A613EED002C8860 /* Checkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C55EC99E1A613EED002C8860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C55EC99F1A613EED002C8860 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -69,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C55306C71A648CEE005833CF /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +93,7 @@
 		C55EC9911A613EED002C8860 = {
 			isa = PBXGroup;
 			children = (
+				C55306C61A648CEE005833CF /* AVFoundation.framework */,
 				C55EC99C1A613EED002C8860 /* Checkin */,
 				C55EC9B61A613EEE002C8860 /* CheckinTests */,
 				C55EC99B1A613EED002C8860 /* Products */,
@@ -121,6 +130,8 @@
 				C55EC9EA1A63B677002C8860 /* TicketViewController.m */,
 				C55EC9EC1A63E4FD002C8860 /* LoginViewController.h */,
 				C55EC9ED1A63E4FD002C8860 /* LoginViewController.m */,
+				C55306C31A648AB2005833CF /* ScannerViewController.h */,
+				C55306C41A648AB2005833CF /* ScannerViewController.m */,
 			);
 			path = Checkin;
 			sourceTree = "<group>";
@@ -128,6 +139,7 @@
 		C55EC99D1A613EED002C8860 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C55306CC1A649941005833CF /* beep.mp3 */,
 				C55EC9DC1A62CAA1002C8860 /* SWRevealViewController */,
 				C55EC9D31A61989C002C8860 /* fonts */,
 				C55EC99E1A613EED002C8860 /* Info.plist */,
@@ -253,6 +265,7 @@
 			files = (
 				C55EC9D41A61FCA1002C8860 /* Montserrat-Bold.otf in Resources */,
 				C55EC9D51A61FCA1002C8860 /* Montserrat-Regular.otf in Resources */,
+				C55306CD1A649941005833CF /* beep.mp3 in Resources */,
 				C55EC9A91A613EED002C8860 /* Main.storyboard in Resources */,
 				C55EC9CD1A617280002C8860 /* Media.xcassets in Resources */,
 				C55EC9AE1A613EED002C8860 /* LaunchScreen.xib in Resources */,
@@ -282,6 +295,7 @@
 				C55EC9A31A613EED002C8860 /* AppDelegate.m in Sources */,
 				C55EC9A01A613EED002C8860 /* main.m in Sources */,
 				C55EC9C91A616E00002C8860 /* HomeViewController.m in Sources */,
+				C55306C51A648AB2005833CF /* ScannerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

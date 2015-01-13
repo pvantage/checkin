@@ -1,0 +1,20 @@
+//
+//  ScannerViewController.h
+//  Checkin
+//
+//  Created by Borislav Jagodic on 1/13/15.
+//  Copyright (c) 2015 Krooya. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+
+@interface ScannerViewController : UIViewController <AVCaptureMetadataOutputObjectsDelegate>
+
+@property (weak, nonatomic) IBOutlet UIView *viewPreview;
+@property (weak, nonatomic) IBOutlet UIButton *btnFlash;
+@property (weak, nonatomic) IBOutlet UIButton *btnCancel;
+
+
+
+@end
