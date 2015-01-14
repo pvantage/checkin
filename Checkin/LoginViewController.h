@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtUrl;
 @property (weak, nonatomic) IBOutlet UITextField *txtApiKey;
 @property (weak, nonatomic) IBOutlet UIButton *btnSignIn;
+@property (weak, nonatomic) IBOutlet UISwitch *autoLogin;
 @property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *textFieldCollection;
 
 @end

@@ -7,17 +7,27 @@
 //
 
 #import "LoginViewController.h"
+#import <AFNetworking/AFNetworking.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface LoginViewController ()
 
 @end
 
-@implementation LoginViewController
-@synthesize txtApiKey, txtUrl, btnSignIn;
+@implementation LoginViewController {
+    NSUserDefaults *defaults;
+}
+@synthesize autoLogin, txtApiKey, txtUrl, btnSignIn;
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if (!defaults) {
+        defaults = [NSUserDefaults standardUserDefaults];
+    }
+    
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     
     btnSignIn.layer.cornerRadius = 4;
@@ -31,23 +41,73 @@
     txtUrl.layer.cornerRadius = 4;
     txtApiKey.layer.cornerRadius = 4;
     
+    txtUrl.text = [defaults stringForKey:@"url"];
+    txtApiKey.text = [defaults stringForKey:@"apiKey"];
+    
     
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
     [txtApiKey endEditing:YES];
     [txtUrl endEditing:YES];
 }
 
-- (IBAction)login:(id)sender {
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)login:(id)sender
+{
+//    NSError *jsonError;
+    if([self inputValid]) {
+        NSString *url = txtUrl.text;
+        NSString *apiKey = txtApiKey.text;
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        NSString *baseUrl = [NSString stringWithFormat:@"%@/tc-api/%@", url, apiKey];
+        NSString *requestedUrl = [NSString stringWithFormat:@"%@/check_credentials?ct_json", baseUrl];
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            NSLog(@"%@",responseObject[@"pass"]);
+            
+            // Store data to user defaults
+            if([responseObject[@"pass"] isEqualToNumber:[NSNumber numberWithInt:1]]) {
+                [defaults setObject:url forKey:@"url"];
+                [defaults setObject:apiKey forKey:@"apiKey"];
+                [defaults setObject:baseUrl forKey:@"baseUrl"];
+                
+                if(autoLogin.on) {
+                    [defaults setBool:YES forKey:@"autoLogin"];
+                } else {
+                    [defaults setBool:NO forKey:@"autoLogin"];
+                }
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Eror" message:@"The API Key and/or URL is wrong!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+                [defaults setBool:NO forKey:@"autoLogin"];
+            }
+            [defaults synchronize];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+        }];
+        
+    }
+}
+
+-(BOOL)inputValid
+{
+    return YES;
 }
 
 /*

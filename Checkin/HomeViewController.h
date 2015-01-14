@@ -12,5 +12,7 @@
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *btnBurger;
 @property (weak, nonatomic) IBOutlet UIView *viewCover;
+@property (weak, nonatomic) IBOutlet UILabel *lblSold;
+@property (weak, nonatomic) IBOutlet UILabel *lblCheckins;
 
 @end

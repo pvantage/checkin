@@ -8,17 +8,26 @@
 
 #import "HomeViewController.h"
 #import "SWRevealViewController.h"
+#import <AFNetworking/AFNetworking.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface HomeViewController ()
 
 @end
 
-@implementation HomeViewController
+@implementation HomeViewController {
+    NSUserDefaults *defaults;
+}
 @synthesize btnBurger;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if(!defaults) {
+        defaults = [NSUserDefaults standardUserDefaults];
+    }
+    
     SWRevealViewController *revealViewController = self.revealViewController;
     if ( revealViewController )
     {
@@ -28,15 +37,17 @@
     }
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-
-//    [self checkLogin];
+    [self checkLogin];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -55,8 +66,39 @@
     // Pass the selected object to the new view controller.
 }
 */
-- (void)checkLogin {
+- (void)checkLogin
+{
+    if(![defaults boolForKey:@"autoLogin"]) {
+        [self performSegueWithIdentifier:@"showLogin" sender:self];
+    } else {
+        [self eventDetails];
+    }
+}
+
+-(void)eventDetails
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self performSegueWithIdentifier:@"showLogin" sender:self];
+    NSString *requestedUrl = [NSString stringWithFormat:@"%@/event_essentials?ct_json", [defaults stringForKey:@"baseUrl"]];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    manager.responseSerializer = [AFCompoundResponseSerializer serializer];
+//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+//    
+    [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        NSLog(@"%@",responseObject);
+
+        self.lblSold.text = [NSString stringWithFormat:@"%@", responseObject[@"sold_tickets"]];
+        self.lblCheckins.text =  [NSString stringWithFormat:@"%@", responseObject[@"checked_tickets"]];
+        
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+
 }
 @end
