@@ -8,6 +8,7 @@
 
 #import "HomeViewController.h"
 #import "SWRevealViewController.h"
+#import "SideMenuViewController.h"
 #import <AFNetworking/AFNetworking.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 
@@ -37,8 +38,6 @@
     }
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -94,11 +93,16 @@
         self.lblSold.text = [NSString stringWithFormat:@"%@", responseObject[@"sold_tickets"]];
         self.lblCheckins.text =  [NSString stringWithFormat:@"%@", responseObject[@"checked_tickets"]];
         
-        
+        [defaults setObject:responseObject[@"event_name"] forKey:@"eventName"];
+        [defaults setObject:responseObject[@"event_date_time"] forKey:@"eventDateTime"];
+        [defaults setObject:responseObject[@"sold_tickets"] forKey:@"soldTickets"];
+        [defaults synchronize];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
     }];
 
 }
+
 @end

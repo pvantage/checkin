@@ -9,19 +9,28 @@
 #import "ListViewController.h"
 #import "SWRevealViewController.h"
 #import "CustomListCell.h"
+#import "TicketViewController.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+#import <AFNetworking/AFNetworking.h>
 
 @interface ListViewController ()
 
 @end
 
 @implementation ListViewController {
-    NSArray *listItems;
+    NSMutableArray *listItems;
+    NSUserDefaults *defaults;
 }
-@synthesize btnBurger;
+@synthesize btnBurger, tblTickets;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+//    listItems = [NSArray array];
+    if(!defaults) {
+        defaults = [NSUserDefaults standardUserDefaults];
+    }
     
     SWRevealViewController *revealViewController = self.revealViewController;
     if ( revealViewController )
@@ -33,13 +42,7 @@
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    listItems = @[
-                  @{@"name": @"Marko Kraljević", @"id": @"32DE89B562-1", @"date": @"08.01.2015"},
-                  @{@"name": @"Mitar Mirić", @"id": @"88BA89B521-5", @"date": @"12.01.2015"},
-                  @{@"name": @"Petar Mojsilović", @"id": @"26133481E6-1", @"date": @"30.12.2014"},
-                  @{@"name": @"Djuro Ostojić", @"id": @"26133481E6-1", @"date": @"10.01.2015"},
-                  @{@"name": @"Aleksandar Makedonski", @"id": @"26133481E6-1", @"date": @"11.12.2014"}
-                ];
+    [self loadTicketsList];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -62,8 +65,8 @@
     NSString *cellIdentifier = @"cellIdentifier";
     CustomListCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
-    cell.lblName.text = listItems[indexPath.row][@"name"];
-    cell.lblID.text = listItems[indexPath.row][@"id"];
+    cell.lblName.text = [NSString stringWithFormat:@"%@ %@", listItems[indexPath.row][@"buyer_first"],listItems[indexPath.row][@"buyer_last"]];
+    cell.lblID.text = listItems[indexPath.row][@"transaction_id"];
     cell.lblDate.text = listItems[indexPath.row][@"date"];
     
     if(indexPath.row % 2 == 1) {
@@ -75,14 +78,55 @@
     return cell;
 }
 
-/*
+-(void)loadTicketsList
+{
+    NSString *requestedUrl = [NSString stringWithFormat:@"%@/tickets_info/20/1/?ct_json", [defaults stringForKey:@"baseUrl"]];
+    [MBProgressHUD showHUDAddedTo:tblTickets animated:YES];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MBProgressHUD hideAllHUDsForView:tblTickets animated:YES];
+//        NSLog(@"%@",[responseObject class]);
+//        listItems = [responseObject count];
+//        listItems = [[NSMutableArray alloc] initWithArray:responseObject];
+        listItems = [NSMutableArray array];
+        unsigned int i;
+
+        NSDateFormatter *printFormatter = [[NSDateFormatter alloc] init];
+        [printFormatter setDateFormat:@"dd.MM.yyyy"];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_GB"]];
+        [dateFormatter setDateFormat:@"MMMM dd, yyyy hh:mm a"];
+
+        NSDate *dateObj;
+        for (i=0; i < [responseObject count]-1; i++) {
+            NSMutableDictionary *tempData = [responseObject objectAtIndex:i];
+            NSMutableDictionary *tempObj = [tempData[@"data"] mutableCopy];
+
+            dateObj = [dateFormatter dateFromString:tempObj[@"payment_date"]];
+            [tempObj setValue:[printFormatter stringFromDate:dateObj] forKey:@"date"];
+            [listItems addObject:tempObj];
+        }
+        
+        
+        [tblTickets reloadData];
+        
+//        NSLog(@"%@",listItems);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+
+    }];
+
+}
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    TicketViewController *ticketVC = [segue destinationViewController];
+    
+    ticketVC.ticketData = [listItems objectAtIndex:[tblTickets indexPathForSelectedRow].row];
 }
-*/
 
 @end

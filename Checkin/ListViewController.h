@@ -10,5 +10,6 @@
 
 @interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
+@property (weak, nonatomic) IBOutlet UITableView *tblTickets;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *btnBurger;
 @end

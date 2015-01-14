@@ -15,6 +15,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnFlash;
 @property (weak, nonatomic) IBOutlet UIButton *btnCancel;
 
+@property (weak, nonatomic) IBOutlet UIView *viewOverlayWrapper;
+@property (weak, nonatomic) IBOutlet UIImageView *imgStatusIcon;
+@property (weak, nonatomic) IBOutlet UILabel *lblStatusTitle;
+@property (weak, nonatomic) IBOutlet UILabel *lblStatusText;
 
 
 @end

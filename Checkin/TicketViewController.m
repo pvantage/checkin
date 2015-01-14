@@ -7,6 +7,8 @@
 //
 
 #import "TicketViewController.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+#import <AFNetworking/AFNetworking.h>
 
 @interface TicketViewController ()
 
@@ -14,26 +16,57 @@
 
 @implementation TicketViewController {
     NSArray *checkinsArray;
+    NSUserDefaults *defaults;
 }
-@synthesize btnCheckin;
+@synthesize btnCheckin, tblCheckins, lblAddress, lblCity, lblCountry, lblDate, lblEmail, lblHolderName, lblID, ticketData, imgStatusIcon, lblStatusText, lblStatusTitle;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    if(!defaults) {
+        defaults = [NSUserDefaults standardUserDefaults];
+    }
+    
     btnCheckin.layer.cornerRadius = 4;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    checkinsArray = @[
-                      @{@"data": @{@"date_checked": @"2014-12-30 12:48:27", @"status": @"Pass"}},
-                      @{@"data": @{@"date_checked": @"2014-12-30 13:24:20", @"status": @"Pass"}},
-                      @{@"data": @{@"date_checked": @"2014-12-30 13:24:19", @"status": @"Pass"}},
-                      @{@"data": @{@"date_checked": @"2014-12-30 13:24:22", @"status": @"Pass"}}
-                    ];
+    lblHolderName.text = [NSString stringWithFormat:@"%@ %@", ticketData[@"buyer_first"], ticketData[@"buyer_last"]];
+    lblID.text = ticketData[@"transaction_id"];
+    lblDate.text = ticketData[@"date"];
+    lblAddress.text = ticketData[@"address"];
+    lblCity.text = ticketData[@"city"];
+    lblCountry.text = ticketData[@"country"];
+    lblEmail.text = ticketData[@"email"];
+    
+    self.viewOverlay.layer.cornerRadius = 5;
+//    self.viewOverlay.layer.shadowColor
+    
+    NSLog(@"Ticket data %@", ticketData);
+    [self ticketCheckins];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (IBAction)overlayClose:(id)sender
+{
+    [self.viewOverlayWrapper setHidden:YES];
+}
+
+- (void)showOverlayWithStatus:(BOOL)status
+{
+    if(status == YES) {
+        imgStatusIcon.image = [UIImage imageNamed:@"success"];
+        lblStatusTitle.text = @"SUCCESS";
+        lblStatusText.text = @"TICKET WITH THIS CODE HAS BEEN CHECKED";
+    } else {
+        imgStatusIcon.image = [UIImage imageNamed:@"error"];
+        lblStatusTitle.text = @"ERROR";
+        lblStatusText.text = @"WRONG TICKET CODE";
+    }
+    [self.viewOverlayWrapper setHidden:NO];
 }
 
 /*
@@ -47,7 +80,18 @@
 */
 - (IBAction)checkin:(id)sender {
     
-    NSLog(@"Check In");
+    NSString *requestedUrl = [NSString stringWithFormat:@"%@/check_in/%@?ct_json", [defaults stringForKey:@"baseUrl"], ticketData[@"checksum"]];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        [self ticketCheckins];
+        [self showOverlayWithStatus:YES];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [self showOverlayWithStatus:NO];
+    }];
 }
 - (IBAction)back:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -77,6 +121,26 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", checkinsArray[indexPath.row][@"data"][@"date_checked"], checkinsArray[indexPath.row][@"data"][@"status"]];
     
     return cell;
+}
+
+#pragma mark - Network
+-(void)ticketCheckins
+{
+    NSString *requestedUrl = [NSString stringWithFormat:@"%@/ticket_checkins/%@?ct_json", [defaults stringForKey:@"baseUrl"], ticketData[@"checksum"]];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        checkinsArray = [[NSArray alloc] initWithArray:responseObject];
+        [tblCheckins reloadData];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+
+    }];
 }
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "ScannerViewController.h"
+#import <AFNetworking/AFNetworking.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface ScannerViewController ()
     @property (nonatomic, strong) AVCaptureSession *captureSession;
@@ -19,12 +21,17 @@
 
 @implementation ScannerViewController {
     NSArray *supportedMetaTypes;
+    NSUserDefaults *defaults;
 }
-@synthesize captureSession, videoPreviewLayer, viewPreview, audioPlayer, btnFlash, btnCancel;
+@synthesize captureSession, videoPreviewLayer, viewPreview, audioPlayer, btnFlash, btnCancel, imgStatusIcon, lblStatusTitle, lblStatusText;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if(!defaults) {
+        defaults = [NSUserDefaults standardUserDefaults];
+    }
     
     supportedMetaTypes = @[
                    AVMetadataObjectTypeQRCode,
@@ -52,6 +59,7 @@
         if([supportedMetaTypes containsObject:[metadataObject type]]) {
             NSLog(@"READ VALUE: %@", [metadataObject stringValue]);
             [self performSelectorOnMainThread:@selector(stopScanning) withObject:nil waitUntilDone:NO];
+            [self performSelectorOnMainThread:@selector(checkinWithCode:) withObject:[metadataObject stringValue] waitUntilDone:NO];
         }
         
         if(audioPlayer) {
@@ -139,6 +147,35 @@
     }
 }
 
+- (void)showOverlayWithStatus:(BOOL)status
+{
+    if(status == YES) {
+        imgStatusIcon.image = [UIImage imageNamed:@"success"];
+        lblStatusTitle.text = @"SUCCESS";
+        lblStatusText.text = @"TICKET WITH THIS CODE HAS BEEN CHECKED";
+    } else {
+        imgStatusIcon.image = [UIImage imageNamed:@"error"];
+        lblStatusTitle.text = @"ERROR";
+        lblStatusText.text = @"WRONG TICKET CODE";
+    }
+    [self.viewOverlayWrapper setHidden:NO];
+}
+
+-(void)checkinWithCode:(NSString*)checksum
+{
+    NSLog(@"TICKET CHECK %@", checksum);
+    NSString *requestedUrl = [NSString stringWithFormat:@"%@/check_in/%@?ct_json", [defaults stringForKey:@"baseUrl"], checksum];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        [self showOverlayWithStatus:YES];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [self showOverlayWithStatus:NO];
+    }];
+}
 
 #pragma mark - Navigation
 
