@@ -82,7 +82,7 @@
         ticketDict = [listItems objectAtIndex:indexPath.row];
     }
         
-    cell.lblName.text = [NSString stringWithFormat:@"%@", ticketDict[@"full_name"]];
+    cell.lblName.text = [NSString stringWithFormat:@"%@", ticketDict[@"name"]];
     cell.lblID.text = ticketDict[@"transaction_id"];
     cell.lblDate.text = ticketDict[@"date"];
     
@@ -103,7 +103,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:@"showDetails" sender:nil];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        [self performSegueWithIdentifier:@"showDetails" sender:nil];
+    }
 }
 
 -(void)loadTicketsList
@@ -129,7 +131,7 @@
 
             dateObj = [dateFormatter dateFromString:tempObj[@"payment_date"]];
             [tempObj setValue:[printFormatter stringFromDate:dateObj] forKey:@"date"];
-            [tempObj setValue:[NSString stringWithFormat:@"%@ %@", tempObj[@"buyer_first"], tempObj[@"buyer_last"]] forKey:@"full_name"];
+            [tempObj setValue:[NSString stringWithFormat:@"%@ %@", tempObj[@"buyer_first"], tempObj[@"buyer_last"]] forKey:@"name"];
             [listItems addObject:tempObj];
         }
         
@@ -147,7 +149,7 @@
 #pragma mark - Search
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"full_name contains[c] %@", searchText];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
     searchResults = [listItems filteredArrayUsingPredicate:resultPredicate];
 }
 

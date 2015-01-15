@@ -50,6 +50,7 @@
     if([[segue identifier] isEqualToString:@"signOut"]) {
         [defaults setObject:NO forKey:@"autoLogin"];
         [defaults setBool:NO forKey:@"logged"];
+        [defaults setObject:@"" forKey:@"apiKey"];
         [defaults synchronize];
     }
 }

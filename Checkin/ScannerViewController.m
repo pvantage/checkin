@@ -163,8 +163,17 @@
 
 -(void)checkinWithCode:(NSString*)checksum
 {
-    NSLog(@"TICKET CHECK %@", checksum);
+    if([checksum containsString:@"|"]) {
+        NSArray *ticketArray = [checksum componentsSeparatedByString:@"|"];
+        checksum = [ticketArray objectAtIndex:[ticketArray count]-1];
+    }
+
     NSString *requestedUrl = [NSString stringWithFormat:@"%@/check_in/%@?ct_json", [defaults stringForKey:@"baseUrl"], checksum];
+    if([NSURL URLWithString:requestedUrl] == nil) {
+        [self showOverlayWithStatus:NO];
+        return;
+    }
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

@@ -30,8 +30,10 @@
     btnCheckin.layer.cornerRadius = 4;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    lblHolderName.text = [NSString stringWithFormat:@"%@ %@", ticketData[@"buyer_first"], ticketData[@"buyer_last"]];
-    lblID.text = ticketData[@"transaction_id"];
+    NSLog(@"TICKET %@", ticketData);
+    
+    lblHolderName.text = ticketData[@"name"];
+    lblID.text = ticketData[@"checksum"];
     lblDate.text = ticketData[@"date"];
     lblAddress.text = ticketData[@"address"];
     lblCity.text = ticketData[@"city"];

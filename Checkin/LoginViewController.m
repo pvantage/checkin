@@ -38,8 +38,8 @@
     txtUrl.layer.borderColor = [[UIColor colorWithRed:211.0/255.0 green:215.0/255.0 blue:217.0/255.0 alpha:1.0] CGColor];
     txtApiKey.layer.borderColor = [[UIColor redColor] CGColor];
     
-    txtUrl.layer.cornerRadius = 4;
-    txtApiKey.layer.cornerRadius = 4;
+    self.viewUrl.layer.cornerRadius = 4;
+    self.viewApi.layer.cornerRadius = 4;
     
     txtUrl.text = [defaults stringForKey:@"url"];
     txtApiKey.text = [defaults stringForKey:@"apiKey"];
@@ -72,12 +72,16 @@
         NSString *baseUrl = [NSString stringWithFormat:@"%@/tc-api/%@", url, apiKey];
         NSString *requestedUrl = [NSString stringWithFormat:@"%@/check_credentials?ct_json", baseUrl];
         
+        if([NSURL URLWithString:requestedUrl] == nil) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Your url is not valid. Please check it again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+            return;
+        }
+        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            
-            NSLog(@"%@",responseObject[@"pass"]);
             
             // Store data to user defaults
             if([responseObject[@"pass"] isEqualToNumber:[NSNumber numberWithInt:1]]) {
