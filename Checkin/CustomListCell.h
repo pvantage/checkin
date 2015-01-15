@@ -10,7 +10,10 @@
 
 @interface CustomListCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *lblName;
-@property (weak, nonatomic) IBOutlet UILabel *lblID;
-@property (weak, nonatomic) IBOutlet UILabel *lblDate;
+@property (strong, nonatomic) IBOutlet UILabel *lblName;
+@property (strong, nonatomic) IBOutlet UILabel *lblID;
+@property (strong, nonatomic) IBOutlet UILabel *lblDate;
+@property (strong, nonatomic) IBOutlet UILabel *lblStaticID;
+@property (strong, nonatomic) IBOutlet UILabel *lblStaticPurchased;
+@property (strong, nonatomic) IBOutlet UIImageView *imgDetails;
 @end

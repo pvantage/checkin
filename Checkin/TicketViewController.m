@@ -39,9 +39,7 @@
     lblEmail.text = ticketData[@"email"];
     
     self.viewOverlay.layer.cornerRadius = 5;
-//    self.viewOverlay.layer.shadowColor
-    
-    NSLog(@"Ticket data %@", ticketData);
+
     [self ticketCheckins];
 }
 
@@ -137,6 +135,7 @@
         [tblCheckins reloadData];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
 

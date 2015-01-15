@@ -67,7 +67,7 @@
 */
 - (void)checkLogin
 {
-    if(![defaults boolForKey:@"autoLogin"]) {
+    if(![defaults boolForKey:@"logged"]) {
         [self performSegueWithIdentifier:@"showLogin" sender:self];
     } else {
         [self eventDetails];
@@ -99,6 +99,7 @@
         [defaults synchronize];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }];

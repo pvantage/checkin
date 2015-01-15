@@ -49,6 +49,8 @@
     // Pass the selected object to the new view controller.
     if([[segue identifier] isEqualToString:@"signOut"]) {
         [defaults setObject:NO forKey:@"autoLogin"];
+        [defaults setBool:NO forKey:@"logged"];
+        [defaults synchronize];
     }
 }
 

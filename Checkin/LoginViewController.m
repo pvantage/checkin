@@ -84,7 +84,7 @@
                 [defaults setObject:url forKey:@"url"];
                 [defaults setObject:apiKey forKey:@"apiKey"];
                 [defaults setObject:baseUrl forKey:@"baseUrl"];
-                
+                [defaults setBool:YES forKey:@"logged"];
                 if(autoLogin.on) {
                     [defaults setBool:YES forKey:@"autoLogin"];
                 } else {
@@ -95,10 +95,12 @@
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Eror" message:@"The API Key and/or URL is wrong!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
                 [defaults setBool:NO forKey:@"autoLogin"];
+                [defaults setBool:NO forKey:@"logged"];
             }
             [defaults synchronize];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }];
