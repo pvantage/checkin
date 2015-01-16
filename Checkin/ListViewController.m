@@ -45,6 +45,22 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     [self loadTicketsList];
+
+//TEST ONLY
+//    NSArray *tempArray = @[
+//                  @{@"date": @"10.01.2015", @"transaction_id": @"32DE89B562-2", @"checksum": @"32DE89B562-2", @"name": @"Hanke Beckett"},
+//                  @{@"date": @"01.01.2015", @"transaction_id": @"EBAAE5E904-2", @"checksum": @"EBAAE5E904-2", @"name": @"Sinjin Gray" },
+//                  @{@"date": @"12.12.2014", @"transaction_id": @"EBAAE5E904-3", @"checksum": @"EBAAE5E904-3", @"name": @"Francisque Rickard"},
+//                  @{@"date": @"22.12.2014", @"transaction_id": @"EBAAE5E904-4", @"checksum": @"EBAAE5E904-4", @"name": @"Halvar Germano"},
+//                  @{@"date": @"16.01.2014", @"transaction_id": @"EBAAE5E904-5", @"checksum": @"EBAAE5E904-5", @"name": @"Nelle Perugia"},
+//                  @{@"date": @"12.01.2015", @"transaction_id": @"EBAAE5E904-6", @"checksum": @"EBAAE5E904-6", @"name": @"Kerem Zhou"},
+//                  @{@"date": @"31.12.2014", @"transaction_id": @"EBAAE5E904-7", @"checksum": @"EBAAE5E904-7", @"name": @"Carolina Tasker"},
+//                  @{@"date": @"29.12.2014", @"transaction_id": @"EBAAE5E904-8", @"checksum": @"EBAAE5E904-8", @"name": @"Christiana Van Niftrik"},
+//                  @{@"date": @"08.01.2015", @"transaction_id": @"EBAAE5E904-9", @"checksum": @"EBAAE5E904-9", @"name": @"Ioana Silje"},
+//                  @{@"date": @"09.12.2014", @"transaction_id": @"EBAAE5E904-0", @"checksum": @"EBAAE5E904-0", @"name": @"Richmal Gerhardsson"},
+//                  @{@"date": @"30.12.2014", @"transaction_id": @"EBAAE5E904-1", @"checksum": @"EBAAE5E904-1", @"name": @"Genoveffa Roijacker"},
+//                ];
+//    listItems = [tempArray mutableCopy];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -167,20 +183,21 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSLog(@"SEGUE");
-    NSIndexPath *indexPath = nil;
-    NSDictionary *ticketDict = nil;
-    if (self.searchDisplayController.active) {
-        NSLog(@"SEARCH ACTIVE");
-        indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
-        ticketDict = [searchResults objectAtIndex:indexPath.row];
-    } else {
-        indexPath = [tblTickets indexPathForSelectedRow];
-        ticketDict = [listItems objectAtIndex:indexPath.row];
+    if([segue.identifier isEqualToString:@"showDetails"]) {
+        NSIndexPath *indexPath = nil;
+        NSDictionary *ticketDict = nil;
+        if (self.searchDisplayController.active) {
+    //        NSLog(@"SEARCH ACTIVE");
+            indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+            ticketDict = [searchResults objectAtIndex:indexPath.row];
+        } else {
+            indexPath = [tblTickets indexPathForSelectedRow];
+            ticketDict = [listItems objectAtIndex:indexPath.row];
+        }
+        
+        TicketViewController *ticketVC = [segue destinationViewController];
+        ticketVC.ticketData = ticketDict;
     }
-    
-    TicketViewController *ticketVC = [segue destinationViewController];
-    ticketVC.ticketData = ticketDict;
 }
 
 @end

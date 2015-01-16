@@ -88,7 +88,7 @@
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
-        NSLog(@"%@",responseObject);
+//        NSLog(@"%@",responseObject);
 
         self.lblSold.text = [NSString stringWithFormat:@"%@", responseObject[@"sold_tickets"]];
         self.lblCheckins.text =  [NSString stringWithFormat:@"%@", responseObject[@"checked_tickets"]];

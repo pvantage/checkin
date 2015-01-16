@@ -7,6 +7,7 @@
 //
 
 #import "TicketViewController.h"
+#import "TicketCustomFieldsTableViewCell.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <AFNetworking/AFNetworking.h>
 
@@ -16,9 +17,10 @@
 
 @implementation TicketViewController {
     NSArray *checkinsArray;
+    NSArray *customFieldsArray;
     NSUserDefaults *defaults;
 }
-@synthesize btnCheckin, tblCheckins, lblAddress, lblCity, lblCountry, lblDate, lblEmail, lblHolderName, lblID, ticketData, imgStatusIcon, lblStatusText, lblStatusTitle;
+@synthesize btnCheckin, tblCheckins, lblDate, lblHolderName, lblID, ticketData, imgStatusIcon, lblStatusText, lblStatusTitle;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -30,16 +32,18 @@
     btnCheckin.layer.cornerRadius = 4;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    NSLog(@"TICKET %@", ticketData);
-    
     lblHolderName.text = ticketData[@"name"];
     lblID.text = ticketData[@"checksum"];
     lblDate.text = ticketData[@"date"];
-    lblAddress.text = ticketData[@"address"];
-    lblCity.text = ticketData[@"city"];
-    lblCountry.text = ticketData[@"country"];
-    lblEmail.text = ticketData[@"email"];
     
+//TEST ONLY
+//    customFieldsArray = @[
+//                          @[@"Ticket Type:", @"VIP"],
+//                          @[@"Buyer Name:", @"Hanke Beckett"],
+//                          @[@"Buyer E-mail:", @"example@gmail.com"],
+//                        ];
+    
+    customFieldsArray = [[NSArray alloc] initWithArray:ticketData[@"custom_fields"]];
     self.viewOverlay.layer.cornerRadius = 5;
 
     [self ticketCheckins];
@@ -94,7 +98,7 @@
     }];
 }
 - (IBAction)back:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -107,20 +111,47 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [checkinsArray count];
+    if (tableView == self.tblCheckins) {
+        return [checkinsArray count];
+    } else {
+        return [customFieldsArray count];
+    }
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = @"checkinsCell";
-    
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    
-    cell.textLabel.font = [UIFont fontWithName:@"Montserrat-Regular" size:13];
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", checkinsArray[indexPath.row][@"data"][@"date_checked"], checkinsArray[indexPath.row][@"data"][@"status"]];
-    
-    return cell;
+    if(tableView == self.tblCheckins) {
+        NSString *cellIdentifier = @"checkinsCell";
+        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell.textLabel.font = [UIFont fontWithName:@"Montserrat-Regular" size:13];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", checkinsArray[indexPath.row][@"data"][@"date_checked"], checkinsArray[indexPath.row][@"data"][@"status"]];
+        return cell;
+    } else {
+        NSString *cellIdentifier = @"customFieldCell";
+        TicketCustomFieldsTableViewCell *ticketCell = (TicketCustomFieldsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        ticketCell.lblKey.text = [customFieldsArray[indexPath.row] objectAtIndex:0];
+        ticketCell.lblValue.text = [customFieldsArray[indexPath.row] objectAtIndex:1];
+        
+        return ticketCell;
+    }
+}
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(tableView == self.tblCustomFields) {
+        return 44;
+    } else {
+        return 30;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(tableView == self.tblCustomFields) {
+        return 44;
+    } else {
+        return 30;
+    }
 }
 
 #pragma mark - Network

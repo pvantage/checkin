@@ -7,6 +7,7 @@
 //
 
 #import "ScannerViewController.h"
+#import "TicketViewController.h"
 #import <AFNetworking/AFNetworking.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 
@@ -21,7 +22,9 @@
 
 @implementation ScannerViewController {
     NSArray *supportedMetaTypes;
+    NSMutableDictionary *checkinData;
     NSUserDefaults *defaults;
+    BOOL checkinStatus;
 }
 @synthesize captureSession, videoPreviewLayer, viewPreview, audioPlayer, btnFlash, btnCancel, imgStatusIcon, lblStatusTitle, lblStatusText;
 
@@ -48,6 +51,10 @@
     [self startScanning];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [self continueScanning];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -57,7 +64,7 @@
     if(metadataObjects != nil && [metadataObjects count] > 0) {
         AVMetadataMachineReadableCodeObject *metadataObject = [metadataObjects objectAtIndex:0];
         if([supportedMetaTypes containsObject:[metadataObject type]]) {
-            NSLog(@"READ VALUE: %@", [metadataObject stringValue]);
+//            NSLog(@"READ VALUE: %@", [metadataObject stringValue]);
             [self performSelectorOnMainThread:@selector(stopScanning) withObject:nil waitUntilDone:NO];
             [self performSelectorOnMainThread:@selector(checkinWithCode:) withObject:[metadataObject stringValue] waitUntilDone:NO];
         }
@@ -68,7 +75,7 @@
     }
 }
 - (IBAction)flashLightToggle:(id)sender {
-    NSLog(@"FLASH LIGHT");
+//    NSLog(@"FLASH LIGHT");
     AVCaptureDevice *flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     if ([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn])
     {
@@ -94,6 +101,7 @@
 
 -(BOOL)startScanning {
     btnFlash.enabled = YES;
+
     NSError *error;
     AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
@@ -127,10 +135,14 @@
 
 -(void)stopScanning {
     [captureSession stopRunning];
-    captureSession = nil;
     btnFlash.enabled = NO;
     
 //    [videoPreviewLayer removeFromSuperlayer];
+}
+
+-(void)continueScanning {
+    [captureSession startRunning];
+    btnFlash.enabled = YES;
 }
 
 -(void)loadBeepSound {
@@ -149,10 +161,12 @@
 
 - (void)showOverlayWithStatus:(BOOL)status
 {
+    checkinStatus = status;
     if(status == YES) {
         imgStatusIcon.image = [UIImage imageNamed:@"success"];
         lblStatusTitle.text = @"SUCCESS";
         lblStatusText.text = @"TICKET WITH THIS CODE HAS BEEN CHECKED";
+        
     } else {
         imgStatusIcon.image = [UIImage imageNamed:@"error"];
         lblStatusTitle.text = @"ERROR";
@@ -179,6 +193,16 @@
     [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
+        NSDateFormatter *printFormatter = [[NSDateFormatter alloc] init];
+        [printFormatter setDateFormat:@"dd.MM.yyyy"];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_GB"]];
+        [dateFormatter setDateFormat:@"MMMM dd, yyyy hh:mm a"];
+        NSDate *dateObj = [dateFormatter dateFromString:responseObject[@"payment_date"]];
+        
+        checkinData = [responseObject mutableCopy];
+        [checkinData setValue:[printFormatter stringFromDate:dateObj] forKey:@"date"];
+        
         [self showOverlayWithStatus:YES];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -190,12 +214,24 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if([segue.identifier isEqualToString:@"showDetails"]) {
+        TicketViewController *ticketVC = [segue destinationViewController];
+        ticketVC.ticketData = checkinData;
+    }
+
+}
+- (IBAction)dismissModal:(id)sender {
+    [self.viewOverlayWrapper setHidden:YES];
+    if (checkinStatus == YES) {
+        [self performSegueWithIdentifier:@"showDetails" sender:self];
+    } else {
+        [self continueScanning];
+    }
 }
 
 - (IBAction)back:(id)sender {
     [self stopScanning];
+    captureSession = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
