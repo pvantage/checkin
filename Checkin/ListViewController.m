@@ -9,6 +9,7 @@
 #import "ListViewController.h"
 #import "SWRevealViewController.h"
 #import "CustomListCell.h"
+#import "ListTableViewCell.h"
 #import "TicketViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <AFNetworking/AFNetworking.h>
@@ -32,6 +33,8 @@
         defaults = [NSUserDefaults standardUserDefaults];
     }
     
+    self.navigationItem.title = [defaults objectForKey:@"APP_TITLE"];
+    
     SWRevealViewController *revealViewController = self.revealViewController;
     if ( revealViewController )
     {
@@ -43,6 +46,8 @@
     searchResults = [NSArray array];
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    [tblTickets registerNib:[UINib nibWithNibName:@"ListTableViewCell" bundle:nil] forCellReuseIdentifier:@"cellIdentifier"];
     
     [self loadTicketsList];
 
@@ -84,10 +89,13 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellIdentifier = @"cellIdentifier";
-    CustomListCell *cell = (CustomListCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    ListTableViewCell *cell = (ListTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil) {
-        cell = [[CustomListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"ListTableViewCell" owner:self options:nil];
+//        cell = [[ListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"MyCustomCellNib" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
     
@@ -99,8 +107,11 @@
     }
         
     cell.lblName.text = [NSString stringWithFormat:@"%@", ticketDict[@"name"]];
-    cell.lblID.text = ticketDict[@"transaction_id"];
+    cell.lblId.text = ticketDict[@"transaction_id"];
     cell.lblDate.text = ticketDict[@"date"];
+    
+    cell.lblStaticId.text = [defaults objectForKey:@"ID"];
+    cell.lblStaticPurchased.text = [defaults objectForKey:@"PURCHASED"];
     
     if(indexPath.row % 2 == 1) {
         cell.backgroundColor = [UIColor colorWithRed:235.0/255.0 green:239.0/255.0 blue:242.0/255.0 alpha:1.0];
@@ -109,6 +120,15 @@
     }
     
     cell.selectionStyle = UITableViewCellStyleDefault;
+    
+    
+    if ([tableView respondsToSelector:@selector(layoutMargins)]) {
+        tableView.layoutMargins = UIEdgeInsetsZero;
+    }
+    if ([cell respondsToSelector:@selector(layoutMargins)]) {
+        cell.layoutMargins = UIEdgeInsetsZero;
+    }
+    
     
     return cell;
 }
@@ -119,14 +139,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+//    if (tableView == self.searchDisplayController.searchResultsTableView) {
         [self performSegueWithIdentifier:@"showDetails" sender:nil];
-    }
+//    }
 }
 
 -(void)loadTicketsList
 {
     NSString *requestedUrl = [NSString stringWithFormat:@"%@/tickets_info/%@/1/?ct_json", [defaults stringForKey:@"baseUrl"], [defaults stringForKey:@"soldTickets"]];
+NSLog(@"REquest %@", requestedUrl);
     [MBProgressHUD showHUDAddedTo:tblTickets animated:YES];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -155,7 +176,7 @@
     
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[defaults objectForKey:@"ERROR"] message:[defaults objectForKey:@"ERROR_LOADING_DATA"] delegate:self cancelButtonTitle:[defaults objectForKey:@"OK"] otherButtonTitles:nil];
         [alert show];
 
     }];
@@ -187,7 +208,6 @@
         NSIndexPath *indexPath = nil;
         NSDictionary *ticketDict = nil;
         if (self.searchDisplayController.active) {
-    //        NSLog(@"SEARCH ACTIVE");
             indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
             ticketDict = [searchResults objectAtIndex:indexPath.row];
         } else {

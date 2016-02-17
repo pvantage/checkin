@@ -25,6 +25,7 @@
     NSMutableDictionary *checkinData;
     NSUserDefaults *defaults;
     BOOL checkinStatus;
+    __weak IBOutlet UINavigationItem *navItem;
 }
 @synthesize captureSession, videoPreviewLayer, viewPreview, audioPlayer, btnFlash, btnCancel, imgStatusIcon, lblStatusTitle, lblStatusText;
 
@@ -35,6 +36,9 @@
     if(!defaults) {
         defaults = [NSUserDefaults standardUserDefaults];
     }
+    
+    navItem.title = [defaults objectForKey:@"APP_TITLE"];
+    [btnCancel setTitle:[defaults objectForKey:@"CANCEL"] forState:UIControlStateNormal];
     
     supportedMetaTypes = @[
                    AVMetadataObjectTypeQRCode,
@@ -164,13 +168,13 @@
     checkinStatus = status;
     if(status == YES) {
         imgStatusIcon.image = [UIImage imageNamed:@"success"];
-        lblStatusTitle.text = @"SUCCESS";
-        lblStatusText.text = @"TICKET WITH THIS CODE HAS BEEN CHECKED";
+        lblStatusTitle.text = [defaults objectForKey:@"SUCCESS"];
+        lblStatusText.text = [defaults objectForKey: @"SUCCESS_MESSAGE"];
         
     } else {
         imgStatusIcon.image = [UIImage imageNamed:@"error"];
-        lblStatusTitle.text = @"ERROR";
-        lblStatusText.text = @"WRONG TICKET CODE";
+        lblStatusTitle.text = [defaults objectForKey: @"ERROR"];
+        lblStatusText.text = [defaults objectForKey:@"ERROR_MESSAGE"];
     }
     [self.viewOverlayWrapper setHidden:NO];
 }
@@ -192,18 +196,22 @@
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"%@", responseObject);
+        if([responseObject[@"status"] boolValue]) {
+            NSDateFormatter *printFormatter = [[NSDateFormatter alloc] init];
+            [printFormatter setDateFormat:@"dd.MM.yyyy"];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_GB"]];
+            [dateFormatter setDateFormat:@"MMMM dd, yyyy hh:mm a"];
+            NSDate *dateObj = [dateFormatter dateFromString:responseObject[@"payment_date"]];
+            
+            checkinData = [responseObject mutableCopy];
+            [checkinData setValue:[printFormatter stringFromDate:dateObj] forKey:@"date"];
+            [self showOverlayWithStatus:YES];
+        } else {
+            [self showOverlayWithStatus:NO];
+        }
         
-        NSDateFormatter *printFormatter = [[NSDateFormatter alloc] init];
-        [printFormatter setDateFormat:@"dd.MM.yyyy"];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_GB"]];
-        [dateFormatter setDateFormat:@"MMMM dd, yyyy hh:mm a"];
-        NSDate *dateObj = [dateFormatter dateFromString:responseObject[@"payment_date"]];
-        
-        checkinData = [responseObject mutableCopy];
-        [checkinData setValue:[printFormatter stringFromDate:dateObj] forKey:@"date"];
-        
-        [self showOverlayWithStatus:YES];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self showOverlayWithStatus:NO];

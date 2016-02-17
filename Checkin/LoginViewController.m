@@ -16,6 +16,9 @@
 
 @implementation LoginViewController {
     NSUserDefaults *defaults;
+    __weak IBOutlet UILabel *lblInstalationURL;
+    __weak IBOutlet UILabel *lblApiKey;
+    __weak IBOutlet UILabel *lblAutoLogin;
 }
 @synthesize autoLogin, txtApiKey, txtUrl, btnSignIn;
 
@@ -27,6 +30,8 @@
     if (!defaults) {
         defaults = [NSUserDefaults standardUserDefaults];
     }
+    
+    
     
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     
@@ -44,6 +49,16 @@
     txtUrl.text = [defaults stringForKey:@"url"];
     txtApiKey.text = [defaults stringForKey:@"apiKey"];
     
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    lblApiKey.text = [defaults valueForKey:@"API_KEY"];
+    lblAutoLogin.text = [defaults valueForKey:@"AUTO_LOGIN"];
+    lblInstalationURL.text = [defaults valueForKey:@"WORDPRESS_INSTALLATION_URL"];
+    [btnSignIn setTitle:[defaults objectForKey:@"SIGN_IN"] forState:UIControlStateNormal];
     
 }
 
@@ -73,12 +88,15 @@
         NSString *requestedUrl = [NSString stringWithFormat:@"%@/check_credentials?ct_json", baseUrl];
         
         if([NSURL URLWithString:requestedUrl] == nil) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Your url is not valid. Please check it again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[defaults stringForKey:@"ERROR"] message:[defaults stringForKey:@"API_KEY_LOGIN_ERROR"] delegate:self cancelButtonTitle:[defaults stringForKey:@"OK"] otherButtonTitles: nil];
             [alert show];
             return;
         }
         
+        NSLog(@"URL: %@", requestedUrl);
+        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager.securityPolicy setAllowInvalidCertificates:YES];
         [manager GET:requestedUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -94,9 +112,51 @@
                 } else {
                     [defaults setBool:NO forKey:@"autoLogin"];
                 }
+                
+                NSString *translationURL = [NSString stringWithFormat:@"%@/translation?ct_json", baseUrl];
+
+                
+                [manager GET:translationURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSLog(@"Translation response obj: %@", responseObject);
+                    if(responseObject[@"pass"] == nil) {
+                        
+                        [defaults setObject: responseObject[@"WORDPRESS_INSTALLATION_URL"] forKey:@"WORDPRESS_INSTALLATION_URL"];
+                        [defaults setObject: responseObject[@"API_KEY"] forKey:@"API_KEY"];
+                        [defaults setObject: responseObject[@"AUTO_LOGIN"] forKey:@"AUTO_LOGIN"];
+                        [defaults setObject: responseObject[@"SIGN_IN"] forKey:@"SIGN_IN"];
+                        [defaults setObject: responseObject[@"SOLD_TICKETS"] forKey:@"SOLD_TICKETS"];
+                        [defaults setObject: responseObject[@"CHECKED_IN_TICKETS"] forKey:@"CHECKED_IN_TICKETS"];
+                        [defaults setObject: responseObject[@"HOME_STATS"] forKey:@"HOME_STATS"];
+                        [defaults setObject: responseObject[@"LIST"] forKey:@"LIST"];
+                        [defaults setObject: responseObject[@"SIGN_OUT"] forKey:@"SIGN_OUT"];
+                        [defaults setObject: responseObject[@"CANCEL"] forKey:@"CANCEL"];
+                        [defaults setObject: responseObject[@"SEARCH"] forKey:@"SEARCH"];
+                        [defaults setObject: responseObject[@"ID"] forKey:@"ID"];
+                        [defaults setObject: responseObject[@"PURCHASED"] forKey:@"PURCHASED"];
+                        [defaults setObject: responseObject[@"CHECKINS"] forKey:@"CHECKINS"];
+                        [defaults setObject: responseObject[@"CHECK_IN"] forKey:@"CHECK_IN"];
+                        [defaults setObject: responseObject[@"SUCCESS"] forKey:@"SUCCESS"];
+                        [defaults setObject: responseObject[@"SUCCESS_MESSAGE"] forKey:@"SUCCESS_MESSAGE"];
+                        [defaults setObject: responseObject[@"OK"] forKey:@"OK"];
+                        [defaults setObject: responseObject[@"ERROR"] forKey:@"ERROR"];
+                        [defaults setObject: responseObject[@"ERROR_MESSAGE"] forKey:@"ERROR_MESSAGE"];
+                        [defaults setObject: responseObject[@"PASS"] forKey:@"PASS"];
+                        [defaults setObject: responseObject[@"FAIL"] forKey:@"FAIL"];
+                        [defaults setObject: responseObject[@"ERROR_LOADING_DATA"] forKey:@"ERROR_LOADING_DATA"];
+                        [defaults setObject: responseObject[@"API_KEY_LOGIN_ERROR"] forKey:@"API_KEY_LOGIN_ERROR"];
+                        [defaults setObject: responseObject[@"APP_TITLE"] forKey:@"APP_TITLE"];
+
+                        
+                        [defaults setBool:YES forKey:@"custom_translations"];
+                        [defaults synchronize];
+                    }
+                }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    NSLog(@"GRESKA NA TRANSLATE %@", error);
+                }];
+                
                 [self dismissViewControllerAnimated:YES completion:nil];
             } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Eror" message:@"The API Key and/or URL is wrong!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[defaults stringForKey:@"ERROR"] message:[defaults stringForKey:@"API_KEY_LOGIN_ERROR"] delegate:self cancelButtonTitle:[defaults stringForKey:@"OK"] otherButtonTitles:nil];
                 [alert show];
                 [defaults setBool:NO forKey:@"autoLogin"];
                 [defaults setBool:NO forKey:@"logged"];
@@ -105,7 +165,8 @@
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[defaults stringForKey:@"ERROR"] message:[defaults stringForKey:@"ERROR_LOADING_DATA"] delegate:self cancelButtonTitle:[defaults stringForKey:@"OK"] otherButtonTitles:nil];
+            NSLog(@"ERROR: %@", error.localizedDescription);
             [alert show];
         }];
         

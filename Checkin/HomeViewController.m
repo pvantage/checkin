@@ -18,12 +18,13 @@
 
 @implementation HomeViewController {
     NSUserDefaults *defaults;
+    __weak IBOutlet UILabel *lblSoldTickets;
+    __weak IBOutlet UILabel *lblCheckedIn;
 }
 @synthesize btnBurger;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     if(!defaults) {
         defaults = [NSUserDefaults standardUserDefaults];
@@ -38,10 +39,25 @@
     }
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    lblCheckedIn.text = @"";
+    lblSoldTickets.text = @"";
+    lblSoldTickets.transform = CGAffineTransformMakeRotation(3.14/2);
+    lblCheckedIn.transform = CGAffineTransformMakeRotation(3.14/2);
+    NSLog(@"Will APEAR");
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    lblCheckedIn.text = [defaults objectForKey:@"CHECKED_IN_TICKETS"];
+    lblSoldTickets.text = [defaults objectForKey:@"SOLD_TICKETS"];
+    self.navigationItem.title = [defaults objectForKey:@"APP_TITLE"];
+    
     [self checkLogin];
 }
 
@@ -100,7 +116,7 @@
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There is a problem in loading your data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[defaults objectForKey:@"ERROR"] message:[defaults objectForKey:@"ERROR_LOADING_DATA"] delegate:self cancelButtonTitle:[defaults objectForKey:@"OK"] otherButtonTitles:nil];
         [alert show];
     }];
 
